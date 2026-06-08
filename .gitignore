@@ -1,0 +1,27 @@
+# Secrets / signing
+keystore.properties
+*.jks
+*.keystore
+release-keys/
+wuni-release.keystore
+
+# Local Android / Gradle machine files
+local.properties
+.gradle/
+.kotlin/
+
+# IDE
+.idea/
+*.iml
+
+# Build outputs
+build/
+app/build/
+
+# APK / AAB outputs
+*.apk
+*.aab
+
+# Native / logs / temp
+captures/
+*.log

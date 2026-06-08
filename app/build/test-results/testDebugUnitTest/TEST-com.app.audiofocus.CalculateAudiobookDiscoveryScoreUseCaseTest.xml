@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.app.audiofocus.CalculateAudiobookDiscoveryScoreUseCaseTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-06-08T13:54:36.302Z" hostname="WINDOWS-9FG6RHD" time="0.017">
+<testsuite name="com.app.audiofocus.CalculateAudiobookDiscoveryScoreUseCaseTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-06-08T14:23:20.839Z" hostname="WINDOWS-9FG6RHD" time="0.015">
   <properties/>
-  <testcase name="returnsAudiobookForStrongSignals" classname="com.app.audiofocus.CalculateAudiobookDiscoveryScoreUseCaseTest" time="0.008"/>
+  <testcase name="returnsAudiobookForStrongSignals" classname="com.app.audiofocus.CalculateAudiobookDiscoveryScoreUseCaseTest" time="0.006"/>
   <testcase name="respectsHiddenDecision" classname="com.app.audiofocus.CalculateAudiobookDiscoveryScoreUseCaseTest" time="0.008"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
