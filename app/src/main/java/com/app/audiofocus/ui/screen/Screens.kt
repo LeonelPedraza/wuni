@@ -29,9 +29,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -59,7 +61,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.blur
@@ -72,6 +73,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -81,9 +83,13 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.ui.Alignment
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -514,10 +520,13 @@ private fun LibraryTabsScreen(
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .fullBleedHorizontally(5.dp),
             ) {
                 Column(
-                    modifier = Modifier.align(Alignment.BottomCenter),
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .offset(y = 10.dp),
                     verticalArrangement = Arrangement.spacedBy(0.dp),
                 ) {
                     if (activeTab != CatalogTab.Settings) {
@@ -913,19 +922,29 @@ fun PlayerScreen(
                 },
             )
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
             ) {
-                Text(
-                    text = formatDuration(displayedPositionMs),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = Color.White,
-                )
-                Text(
-                    text = state.durationLabel,
-                    style = MaterialTheme.typography.labelMedium,
-                    color = Color.White.copy(alpha = 0.72f),
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    Text(
+                        text = formatDuration(displayedPositionMs),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = Color.White,
+                    )
+                    Text(
+                        text = "/",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = Color.White,
+                    )
+                    Text(
+                        text = state.durationLabel,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = Color.White.copy(alpha = 0.72f),
+                    )
+                }
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -1423,32 +1442,58 @@ private fun BottomNavBar(
     onOpenFavorites: () -> Unit,
     onOpenSettings: () -> Unit,
 ) {
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFF1D153F))
-            .padding(top = 14.dp, bottom = 12.dp),
-        horizontalArrangement = Arrangement.SpaceAround,
-        verticalAlignment = Alignment.CenterVertically,
+            .background(Color(0xFF1D153F)),
     ) {
-        NavAction(
-            iconRes = R.drawable.ic_huge_book_open_01,
-            title="Librería",
-            isSelected = activeTab == CatalogTab.Library,
-            onClick = onOpenLibrary,
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 14.dp, bottom = 12.dp),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            NavAction(
+                iconRes = R.drawable.ic_huge_book_open_01,
+                title="Librería",
+                isSelected = activeTab == CatalogTab.Library,
+                onClick = onOpenLibrary,
+            )
+            NavAction(
+                iconRes = R.drawable.ic_huge_favourite,
+                title="Favoritos",
+                isSelected = activeTab == CatalogTab.Favorites,
+                onClick = onOpenFavorites,
+            )
+            NavAction(
+                iconRes = R.drawable.ic_huge_settings_01,
+                title="Ajustes",
+                isSelected = activeTab == CatalogTab.Settings,
+                onClick = onOpenSettings,
+            )
+        }
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .windowInsetsBottomHeight(WindowInsets.navigationBars),
         )
-        NavAction(
-            iconRes = R.drawable.ic_huge_favourite,
-            title="Favoritos",
-            isSelected = activeTab == CatalogTab.Favorites,
-            onClick = onOpenFavorites,
+    }
+}
+
+private fun Modifier.fullBleedHorizontally(extra: Dp): Modifier = composed {
+    val extraPx = with(LocalDensity.current) { extra.roundToPx() }
+    this.layout { measurable, constraints ->
+        val expandedMaxWidth = constraints.maxWidth + (extraPx * 2)
+        val placeable = measurable.measure(
+            constraints.copy(
+                minWidth = expandedMaxWidth,
+                maxWidth = expandedMaxWidth,
+            ),
         )
-        NavAction(
-            iconRes = R.drawable.ic_huge_settings_01,
-            title="Ajustes",
-            isSelected = activeTab == CatalogTab.Settings,
-            onClick = onOpenSettings,
-        )
+        layout(constraints.maxWidth, placeable.height) {
+            placeable.placeRelative(-extraPx, 0)
+        }
     }
 }
 
