@@ -1,0 +1,20 @@
+R_DEF: Internal format may change without notice
+local
+drawable ic_huge_arrow_down_01
+drawable ic_huge_book_open_01
+drawable ic_huge_delete_02
+drawable ic_huge_favourite
+drawable ic_huge_go_backward_10_sec
+drawable ic_huge_go_forward_10_sec
+drawable ic_huge_home_01
+drawable ic_huge_more_vertical
+drawable ic_huge_pause
+drawable ic_huge_play
+drawable ic_huge_search_01
+drawable ic_huge_settings_01
+drawable ic_huge_view_off
+drawable named_brand
+mipmap app_icon
+raw splash_screen_animation
+string app_name
+style Theme.AudioFocus
